@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جرأت یا حقیقت</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Lalezar',Tahoma,sans-serif;
+    user-select:none;
+}
+
+:root {
+    --bg-color: #090d16;
+    --text-color: white;
+    --panel-bg: #131c2e;
+    --border-color: #334155;
+    --input-bg: #182235;
+    --player-bg: #102d42;
+    --hint-color: #94a3b8;
+    --question-bg: #141c2e;
+}
+
+body.light-theme {
+    --bg-color: #f8fafc;
+    --text-color: #0f172a;
+    --panel-bg: #ffffff;
+    --border-color: #cbd5e1;
+    --input-bg: #f1f5f9;
+    --player-bg: #e2e8f0;
+    --hint-color: #64748b;
+    --question-bg: #ffffff;
+}
+
+body{
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height:100vh;
+    padding:15px;
+    transition: background 0.3s, color 0.3s;
+}
+
+button,input{
+    font-family:'Lalezar',Tahoma,sans-serif;
+}
+
+button{
+    cursor:pointer;
+}
+
+.screen{
+    width:100%;
+    max-width:440px;
+    margin:auto;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.top{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.telegram{
+    flex:1;
+    background:#229ed9;
+    color:white;
+    text-decoration:none;
+    text-align:center;
+    padding:9px;
+    border-radius:20px;
+    font-size:15px;
+}
+
+.settings-btn{
+    background: var(--input-bg);
+    border:1px solid var(--border-color);
+    color: var(--text-color);
+    padding:8px 12px;
+    border-radius:20px;
+    font-size:15px;
+}
+
+.settings{
+    background: var(--panel-bg);
+    border:1px solid #38bdf8;
+    padding:14px;
+    border-radius:15px;
+    margin-bottom:12px;
+}
+
+.settings h3{
+    color:#38bdf8;
+    margin-bottom:10px;
+}
+
+.settings-row {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.time-buttons{
+    display:flex;
+    gap:5px;
+    margin:8px 0 12px;
+}
+
+.time-buttons button{
+    flex:1;
+    background: var(--input-bg);
+    color: var(--text-color);
+    border:1px solid var(--border-color);
+    padding:7px;
+    border-radius:8px;
+}
+
+.time-buttons button.active{
+    background:#10b981;
+    color:white;
+}
+
+.theme-toggle-btn {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.reset{
+    width:100%;
+    border:0;
+    background:#e11d48;
+    color:white;
+    padding:9px;
+    border-radius:9px;
+    font-size:16px;
+    margin-top: 8px;
+}
+
+h1{
+    text-align:center;
+    color:#38bdf8;
+    font-size:30px;
+    margin:10px 0;
+}
+
+.categories{
+    display:flex;
+    gap:7px;
+    margin-bottom:12px;
+}
+
+.category{
+    flex:1;
+    background: var(--input-bg);
+    color: var(--hint-color);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    padding:9px 3px;
+    font-size:15px;
+}
+
+.category.active{
+    background:#38bdf8;
+    color:#090d16;
+}
+
+.player-box{
+    display:flex;
+    gap:7px;
+}
+
+.player-input{
+    flex:1;
+    background: var(--input-bg);
+    color: var(--text-color);
+    border:2px solid #2563eb;
+    border-radius:12px;
+    padding:10px;
+    outline:none;
+    text-align:center;
+    font-size:16px;
+}
+
+.add{
+    width:55px;
+    border:0;
+    background:#10b981;
+    color:white;
+    border-radius:12px;
+    font-size:25px;
+}
+
+.players{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
+    margin:10px 0;
+}
+
+.player{
+    background: var(--player-bg);
+    color:#38bdf8;
+    border:1px solid #2563eb;
+    border-radius:15px;
+    padding:5px 10px;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.player .score-badge{
+    background:#38bdf8;
+    color:#090d16;
+    padding:0 6px;
+    border-radius:10px;
+    font-size:13px;
+}
+
+.player span{
+    color:#f43f5e;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.empty-msg{
+    text-align:center;
+    color: var(--hint-color);
+    font-size:15px;
+    margin:8px 0;
+}
+
+.bottle-area{
+    width:210px;
+    height:210px;
+    margin:5px auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    cursor:pointer;
+}
+
+.ring{
+    position:absolute;
+    width:195px;
+    height:195px;
+    border:2px dashed #2563eb;
+    border-radius:50%;
+}
+
+.bottle{
+    width:70px;
+    height:160px;
+    position:relative;
+    z-index:2;
+    transition:transform 3.5s cubic-bezier(.12,.8,.15,1);
+}
+
+.hint{
+    text-align:center;
+    color: var(--hint-color);
+    margin-bottom:10px;
+    font-size:16px;
+}
+
+.game{
+    background: var(--panel-bg);
+    border:1px solid var(--border-color);
+    border-radius:20px;
+    padding:18px;
+}
+
+.turn{
+    text-align:center;
+    color:#f43f5e;
+    font-size:24px;
+    margin:5px 0 12px;
+}
+
+.choices{
+    display:flex;
+    gap:10px;
+}
+
+.truth,.dare{
+    flex:1;
+    border:0;
+    color:white;
+    padding:13px;
+    border-radius:12px;
+    font-size:18px;
+}
+
+.truth{
+    background:#0284c7;
+}
+
+.dare{
+    background:#e11d48;
+}
+
+.question{
+    min-height:110px;
+    margin-top:14px;
+    padding:15px;
+    background: var(--question-bg);
+    border:1px solid var(--border-color);
+    border-radius:14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    line-height:1.8;
+    font-size:17px;
+}
+
+.badge{
+    padding:3px 12px;
+    border-radius:15px;
+    margin-bottom:8px;
+}
+
+.truth-badge{
+    background:#0284c7;
+}
+
+.dare-badge{
+    background:#e11d48;
+}
+
+.bonus-box{
+    margin-top:10px;
+    background: var(--input-bg);
+    border:1px dashed #fbbf24;
+    padding:8px;
+    border-radius:10px;
+    text-align:center;
+    color:#fbbf24;
+    font-size:15px;
+}
+
+.action-row{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.sub{
+    flex:1;
+    padding:11px;
+    border:1px solid var(--border-color);
+    background: var(--input-bg);
+    color:#38bdf8;
+    border-radius:12px;
+    font-size:16px;
+}
+
+.success-btn{
+    flex:1;
+    padding:11px;
+    border:0;
+    background:#10b981;
+    color:white;
+    border-radius:12px;
+    font-size:16px;
+}
+
+.next{
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border:0;
+    background:#3b82f6;
+    color:white;
+    border-radius:12px;
+    font-size:17px;
+}
+
+.timer{
+    text-align:center;
+    color:#fbbf24;
+    font-size:18px;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- صفحه اصلی -->
+<div id="home" class="screen">
+
+<div class="top">
+<a class="telegram" href="https://t.me/joratvahaghighat_ir" target="_blank">📢 کانال تلگرام</a>
+<button class="settings-btn" onclick="toggleSettings()">⚙️ تنظیمات</button>
+</div>
+
+<div id="settings" class="settings hidden">
+<h3>⚙️ تنظیمات بازی</h3>
+
+<div class="settings-row">
+<div>🌓 حالت نمایش صفحه</div>
+<button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">☀️ تغییر به تم روشن</button>
+</div>
+
+<div class="settings-row" style="margin-top:10px;">⏱️ زمان تایمر چالش</div>
+<div class="time-buttons">
+<button id="time15" onclick="setTime(15)">۱۵ ثانیه</button>
+<button id="time30" class="active" onclick="setTime(30)">۳۰ ثانیه</button>
+<button id="time60" onclick="setTime(60)">۶۰ ثانیه</button>
+</div>
+<button class="reset" onclick="resetPlayers()">🔄 حذف همه بازیکنان</button>
+</div>
+
+<h1>🔥 جرأت یا حقیقت 🔥</h1>
+
+<div class="categories">
+<button id="catFamily" class="category active" onclick="setCategory('family')">👨‍👩‍👧‍👦 خانوادگی</button>
+<button id="catFriendly" class="category" onclick="setCategory('friendly')">🥳 دوستانه</button>
+<button id="catHard" class="category" onclick="setCategory('hard')">💀 سخت</button>
+</div>
+
+<div class="player-box">
+<input id="playerInput" class="player-input" placeholder="نام بازیکن جدید..." maxlength="12" onkeydown="enterAdd(event)">
+<button class="add" onclick="addPlayer()">+</button>
+</div>
+
+<div id="players" class="players"></div>
+
+<div class="bottle-area" onclick="spinBottle()">
+<div class="ring"></div>
+<div id="bottle" class="bottle">
+<svg viewBox="0 0 100 220" width="100%" height="100%">
+<rect x="42" y="8" width="16" height="16" rx="3" fill="#f43f5e"/>
+<rect x="39" y="24" width="22" height="6" rx="2" fill="#fb7185"/>
+<path d="M43 30 L43 65 Q43 85 20 105 L20 195 Q20 212 36 212 L64 212 Q80 212 80 195 L80 105 Q57 85 57 65 L57 30 Z" fill="#38bdf8"/>
+</svg>
+</div>
+</div>
+
+<div id="hint" class="hint">👇 نام بازیکنان را اضافه کنید و روی بطری بزنید!</div>
+
+</div>
+
+
+<!-- صفحه بازی -->
+<div id="game" class="screen hidden">
+<div class="game">
+
+<div id="turn" class="turn">نوبت: -</div>
+
+<div id="choices" class="choices">
+<button class="truth" onclick="showQuestion('truth')">حقیقت 💡</button>
+<button class="dare" onclick="showQuestion('dare')">جرأت 🔥</button>
+</div>
+
+<div id="question" class="question">یکی از گزینه‌های بالا را انتخاب کنید!</div>
+
+<div id="bonusBox" class="bonus-box hidden">🎁 جایزه یا امتیاز ویژه این دور: <span id="bonusText">هیچ</span></div>
+
+<div class="action-row">
+<button id="skip" class="sub hidden" onclick="skipQuestion()">🔄 تعویض سؤال</button>
+<button id="successBtn" class="success-btn hidden" onclick="completeChallenge()">✅ انجام شد (+امتیاز)</button>
+</div>
+
+<div id="timer" class="timer hidden">⏱️ زمان باقی‌مانده: <span id="timerValue">30</span> ثانیه</div>
+
+<button id="timerButton" class="sub hidden" onclick="startTimer()" style="width:100%; margin-top:10px;">⏱️ شروع تایمر چالش</button>
+
+<button id="next" class="next hidden" onclick="nextRound()">دور بعدی 🔄</button>
+
+</div>
+</div>
+
+
+<script>
+var database = {
+family:{
+truth:[
+"خجالت‌آورترین خاطره مدرسه‌ات چی بوده؟",
+"اگر یک قانون خانه را عوض می‌کردی چه بود؟",
+"بزرگ‌ترین شیطنت بچگی‌ات چی بوده؟",
+"عجیب‌ترین خوابی که تا حالا دیدی چی بوده؟",
+"کدام غذا را بیشتر از همه دوست داری؟",
+"اگر ۱۰۰ میلیون پول داشتی چی می‌خریدی؟",
+"بهترین خاطره خانوادگی‌ات چیست؟",
+"دوست داری در آینده چه شغلی داشته باشی؟",
+"کدام عضو خانواده را بیشتر از همه اذیت می‌کنی؟"
+],
+dare:[
+"یک شعر کوتاه با صدای بلند بخوان!",
+"۱۰ حرکت ورزشی ساده انجام بده!",
+"۳۰ ثانیه ادای یک حیوان را دربیاور!",
+"یک جوک تعریف کن!",
+"۳۰ ثانیه مثل ربات حرف بزن!",
+"ادای مجری اخبار را دربیاور!",
+"یک آهنگ کوتاه با صدای خنده‌دار بخوان!"
+]
+},
+friendly:{
+truth:[
+"بدترین سوتی‌ای که جلوی دوست‌هایت دادی چیست؟",
+"بهترین خاطره‌ات با دوستانت چیست؟",
+"عجیب‌ترین شغلی که دوست داشتی داشته باشی چیست؟",
+"بامزه‌ترین لقبی که داشته‌ای چیست؟",
+"کدام بازی را بیشتر از همه دوست داری؟",
+"اگر پول زیادی داشتی اول چه چیزی می‌خریدی؟",
+"بهترین ویژگی دوست صمیمی‌ات چیست؟",
+"اگر قرار بود با یکی از افراد جمع به جزیره متروک بروی، چه کسی را انتخاب می‌کردی؟"
+],
+dare:[
+"۳۰ ثانیه بدون موسیقی برقص!",
+"یک جوک برای جمع تعریف کن!",
+"ادای یک شخصیت معروف را دربیاور!",
+"۳۰ ثانیه مثل ربات حرف بزن!",
+"یک آهنگ را با صدای خنده‌دار بخوان!",
+"۱۰ ثانیه بدون خندیدن به یک نفر نگاه کن!"
+]
+},
+hard:{
+truth:[
+"بزرگ‌ترین ترست چیست؟",
+"بزرگ‌ترین اشتباهی که از آن درس گرفتی چیست؟",
+"بزرگ‌ترین آرزویت چیست؟",
+"چه چیزی بیشتر از همه عصبانی‌ات می‌کند؟",
+"اگر یک تصمیم گذشته را تغییر می‌دادی، چه بود؟",
+"کدام ویژگی اخلاقی خودت را دوست داری بهتر کنی؟",
+"یک راز که تا حالا به کسی نگفته‌ای را اعتراف کن!"
+],
+dare:[
+"۳۰ ثانیه با صدای خیلی جدی صحبت کن!",
+"یک داستان خنده‌دار تعریف کن!",
+"یک نمایش کوتاه اجرا کن!",
+"۲۰ ثانیه بدون خندیدن ثابت بمان!",
+"ادای یک مجری را دربیاور!",
+"یک شعر کوتاه فی‌البداهه بساز!"
+]
+}
+};
+
+var bonusList = [
+"🌟 امتیاز دو برابر برای این چالش!",
+"🎁 شانس مجدد؛ یک سؤال جایزه!",
+"🛡️ معافیت از جریمه در دور بعدی!",
+"💎 دریافت مدال ستاره طلایی!",
+"✨ بدون پاداش خاص، فقط تلاش کن!"
+];
+
+var players = JSON.parse(localStorage.getItem("jorat_players")) || [];
+var currentTheme = localStorage.getItem("jorat_theme") || "dark";
+
+var category = "family";
+var rotation = 0;
+var spinning = false;
+var timerSeconds = 30;
+var timerInterval = null;
+var currentType = "";
+var canSkip = true;
+var activePlayerIndex = 0;
+
+/* اعمال تم اولیه */
+if (currentTheme === "light") {
+    document.body.classList.add("light-theme");
+    document.getElementById("themeToggleBtn").innerText = "🌙 تغییر به تم تاریک";
+}
+
+function toggleTheme() {
+    var btn = document.getElementById("themeToggleBtn");
+    if (document.body.classList.contains("light-theme")) {
+        document.body.classList.remove("light-theme");
+        btn.innerText = "☀️ تغییر به تم روشن";
+        localStorage.setItem("jorat_theme", "dark");
+    } else {
+        document.body.classList.add("light-theme");
+        btn.innerText = "🌙 تغییر به تم تاریک";
+        localStorage.setItem("jorat_theme", "light");
+    }
+}
+
+function savePlayersData() {
+    localStorage.setItem("jorat_players", JSON.stringify(players));
+}
+
+function renderPlayers(){
+    var box = document.getElementById("players");
+    box.innerHTML="";
+
+    if(players.length === 0){
+        box.innerHTML = '<div class="empty-msg">هنوز بازیکنی اضافه نشده است. لطفاً حداقل ۲ بازیکن اضافه کنید.</div>';
+        savePlayersData();
+        return;
+    }
+
+    for(var i=0; i<players.length; i++){
+        var div = document.createElement("div");
+        div.className="player";
+        div.innerHTML = players[i].name + ' <span class="score-badge">' + players[i].score + '</span> <span onclick="removePlayer('+i+')">×</span>';
+        box.appendChild(div);
+    }
+    savePlayersData();
+}
+
+function addPlayer(){
+    var input = document.getElementById("playerInput");
+    var name = input.value.trim();
+    if(name===""){
+        return;
+    }
+    if(players.length>=12){
+        alert("حداکثر ۱۲ بازیکن!");
+        return;
+    }
+    for(var j=0; j<players.length; j++){
+        if(players[j].name === name){
+            alert("این بازیکن قبلاً اضافه شده است.");
+            return;
+        }
+    }
+    players.push({ name: name, score: 0 });
+    input.value="";
+    renderPlayers();
+}
+
+function enterAdd(event){
+    if(event.key==="Enter"){
+        addPlayer();
+    }
+}
+
+function removePlayer(index){
+    players.splice(index,1);
+    renderPlayers();
+}
+
+function toggleSettings(){
+    document.getElementById("settings").classList.toggle("hidden");
+}
+
+function setTime(seconds){
+    timerSeconds=seconds;
+    document.getElementById("time15").classList.remove("active");
+    document.getElementById("time30").classList.remove("active");
+    document.getElementById("time60").classList.remove("active");
+    if(seconds===15) document.getElementById("time15").classList.add("active");
+    if(seconds===30) document.getElementById("time30").classList.add("active");
+    if(seconds===60) document.getElementById("time60").classList.add("active");
+}
+
+function setCategory(name){
+    category=name;
+    document.getElementById("catFamily").classList.remove("active");
+    document.getElementById("catFriendly").classList.remove("active");
+    document.getElementById("catHard").classList.remove("active");
+    if(name==="family") document.getElementById("catFamily").classList.add("active");
+    if(name==="friendly") document.getElementById("catFriendly").classList.add("active");
+    if(name==="hard") document.getElementById("catHard").classList.add("active");
+}
+
+function spinBottle(){
+    if(spinning) return;
+    if(players.length<2){
+        alert("برای شروع بازی حداقل باید ۲ بازیکن اضافه کنید!");
+        return;
+    }
+    spinning=true;
+    document.getElementById("hint").innerText = "🍾 بطری در حال چرخش...";
+    rotation += 1440 + Math.floor(Math.random()*1440);
+    document.getElementById("bottle").style.transform = "rotate("+rotation+"deg)";
+
+    setTimeout(function(){
+        activePlayerIndex = Math.floor(Math.random()*players.length);
+        var selected = players[activePlayerIndex].name;
+
+        document.getElementById("home").classList.add("hidden");
+        document.getElementById("game").classList.remove("hidden");
+        document.getElementById("turn").innerText = "نوبت: " + selected;
+        document.getElementById("question").innerText = "حقیقت یا جرأت را انتخاب کنید!";
+        document.getElementById("choices").classList.remove("hidden");
+        document.getElementById("skip").classList.add("hidden");
+        document.getElementById("successBtn").classList.add("hidden");
+        document.getElementById("timerButton").classList.add("hidden");
+        document.getElementById("timer").classList.add("hidden");
+        document.getElementById("next").classList.add("hidden");
+        document.getElementById("bonusBox").classList.add("hidden");
+
+        spinning=false;
+    },3600);
+}
+
+function showQuestion(type){
+    currentType=type;
+    canSkip=true;
+
+    var list = database[category][type];
+    var random = Math.floor(Math.random()*list.length);
+    var text = list[random];
+
+    var q = document.getElementById("question");
+    q.innerHTML = '<div class="badge ' + (type==="truth"?"truth-badge":"dare-badge") + '">' + (type==="truth"?"حقیقت 💡":"جرأت 🔥") + '</div><div>' + text + '</div>';
+
+    var randomBonus = bonusList[Math.floor(Math.random()*bonusList.length)];
+    document.getElementById("bonusText").innerText = randomBonus;
+    document.getElementById("bonusBox").classList.remove("hidden");
+
+    document.getElementById("choices").classList.add("hidden");
+    document.getElementById("skip").classList.remove("hidden");
+    document.getElementById("successBtn").classList.remove("hidden");
+    document.getElementById("timerButton").classList.remove("hidden");
+    document.getElementById("next").classList.remove("hidden");
+}
+
+function skipQuestion(){
+    if(!canSkip){
+        alert("تعویض سؤال فقط یک بار مجاز است.");
+        return;
+    }
+    canSkip=false;
+    showQuestion(currentType);
+    document.getElementById("skip").classList.add("hidden");
+}
+
+function completeChallenge(){
+    players[activePlayerIndex].score += 10;
+    renderPlayers();
+    nextRound();
+}
+
+function startTimer(){
+    clearInterval(timerInterval);
+    var left=timerSeconds;
+    document.getElementById("timer").classList.remove("hidden");
+    document.getElementById("timerButton").classList.add("hidden");
+    document.getElementById("timerValue").innerText=left;
+
+    timerInterval = setInterval(function(){
+        left--;
+        document.getElementById("timerValue").innerText=left;
+        if(left<=0){
+            clearInterval(timerInterval);
+            document.getElementById("timerValue").innerText = "تمام شد! 🎉";
+            document.getElementById("timerButton").classList.remove("hidden");
+        }
+    },1000);
+}
+
+function nextRound(){
+    clearInterval(timerInterval);
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+    document.getElementById("question").innerText = "یکی از گزینه‌های بالا را انتخاب کنید!";
+    document.getElementById("hint").innerText = "👇 نام بازیکنان را اضافه کنید و روی بطری بزنید!";
+}
+
+function resetPlayers(){
+    players = [];
+    renderPlayers();
+    toggleSettings();
+}
+
+renderPlayers();
+</script>
+
+</body>
+</html>
+```
