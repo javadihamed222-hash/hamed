@@ -1,0 +1,13 @@
+{
+  "background_color": "#000000",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "جرأت و حقیقت",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "جرأت و حقیقت",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "/?source=pwa",
+  "description": "بازی با قابلیت امتیاز گیری و خانوادگی"
+}
